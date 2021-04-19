@@ -1,0 +1,73 @@
+body {
+	background-color: #217346;
+}
+
+.wrapper {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+}
+
+/* title*/
+
+.tools {
+	height: 60px;
+	display: flex;
+	justify-content: space-around;
+	margin: 0 0 5px 0;
+	background-color: #217346;
+}
+
+.btn {
+	margin: 0 0 0 15px;
+	border: 0;
+	background-color: #217346;
+	color: white;
+	outline: 0;
+	cursor: pointer;
+}
+
+.btn:hover {
+	background-color: #0e5c2f;
+}
+/* Начало анимации кнопок */
+/* Нужно потом сделать, чтобы при наведении на кнопку подчеркивалась ссылка */
+.btn span::after {
+	display: block;
+	content: "";
+	padding: 0 0 2px 0;
+	border-bottom: solid 2px white;
+	transform: scaleX(0);
+	transition: transform 250ms ease-in-out;
+}
+
+.btn span:hover:after {
+	transform: scaleX(1);
+}
+.btn span.fromRight:after {
+	transform-origin: 100% 50%;
+}
+.btn span.fromLeft:after {
+	transform-origin: 0% 50%;
+}
+/* Конец анимации кнопок */
+
+.table {
+	margin: 0 10px 0 10px;
+}
+
+.table tr td {
+	margin: 0;
+}
+
+.input-text {
+	width: 98%;
+	padding: 1%;
+	height: 20px;
+	border: 1px solid #999;
+	outline: none;
+}
+
+.input-text:hover {
+	background-color: #eee;
+}
