@@ -229,77 +229,10 @@ document.querySelector('.tools__sum-btn').addEventListener('click', function () 
 		}
 	}
 	/* Запись массива в матрицу ответов*/
-	/* Потом это надо будет в одну функцию вынести
-		Этой функции на вход будет подаваться матрица С"
-	*/
-
-
-	var answerTableBody = document.querySelector('.answer-table__body');
-	if (answerTableBody) {
-		// удаляем старый, потом создаем новый
-		answerTableBody.remove();
-	}
-	answerTableBody = document.createElement('tbody');
-	answerTableBody.className = 'answer-table__body';
-	// cоздание таблицы ответов
-	for (var i = 0; i < C.length; i++) {
-		var tr = document.createElement('tr');
-		for (var j = 0; j < tableCols; j++) {
-			var td = document.createElement('td');
-			td.innerHTML = '<input type="text" class=\"input-text\">';
-			tr.appendChild(td);
-		}
-		answerTableBody.appendChild(tr);
-	}
-	document.querySelector('.answer-table').appendChild(answerTableBody);
-	// показать разделитель
-	var separator = document.querySelector('.separator');
-	separator.style.display = 'block';
-
-	// записываем массив "С" в таблицу ответов 
-	var answerInputs = document.querySelectorAll('.answer-table__body input[class="input-text"]');
-	for (var i = 0; i < C.length; i++) {
-		for (var j = 0; j < C[i].length; j++) {
-			answerInputs[i * tableCols + j].value = C[i][j];
-		}
-	}
-
-	// printAnswer(C);
-	// console.log(C);
+	printAnswer(C);
 });
 
-function printAnswer(С) {
-	var answerTableBody = document.querySelector('.answer-table__body');
-	if (answerTableBody) {
-		// удаляем старый, потом создаем новый
-		answerTableBody.remove();
-	}
-	answerTableBody = document.createElement('tbody');
-	answerTableBody.className = 'answer-table__body';
-	// cоздание таблицы ответов
-	for (var i = 0; i < C.length; i++) {
-		var tr = document.createElement('tr');
-		for (var j = 0; j < tableCols; j++) {
-			var td = document.createElement('td');
-			td.innerHTML = '<input type="text" class=\"input-text\">';
-			tr.appendChild(td);
-		}
-		answerTableBody.appendChild(tr);
-	}
-	document.querySelector('.answer-table').appendChild(answerTableBody);
-	// показать разделитель
-	var separator = document.querySelector('.separator');
-	separator.style.display = 'block';
 
-	// записываем массив "С" в таблицу ответов 
-	var answerInputs = document.querySelectorAll('.answer-table__body input[class="input-text"]');
-	for (var i = 0; i < C.length; i++) {
-		for (var j = 0; j < C[i].length; j++) {
-			answerInputs[i * tableCols + j].value = C[i][j];
-		}
-	}
-	/* Конец */
-}
 
 
 document.querySelector('.tools__sub-btn').addEventListener('click', function () {
@@ -320,10 +253,10 @@ document.querySelector('.tools__sub-btn').addEventListener('click', function () 
 	// расчет матрицы C
 	for (var i = 0; i < aInfo.rows; i++) {
 		for (var j = 0; j < aInfo.cols; j++) {
-			C[i][j] = Number(A[i][j]) - Number(B[i][j]);
+			C[i][j] = A[i][j] - B[i][j];
 		}
 	}
-
+	printAnswer(C);
 });
 
 document.querySelector('.tools__multiply-btn').addEventListener('click', function () {
@@ -331,21 +264,73 @@ document.querySelector('.tools__multiply-btn').addEventListener('click', functio
 });
 
 document.querySelector('.tools__determenant-btn').addEventListener('click', function () {
+	// детерменант будет расчитываться
+	// по последней выделенной матрице 
+	var A = createMatrix(1);
+
+	// в двойные скобки, потому что ф-кция
+	// printAnswer принимает на вход двумерный массив
+	printAnswer([[determinant(A)]]);
 
 });
 
+
+/* скопировано с 
+	http://mathhelpplanet.com/static.php?p=javascript-operatsii-nad-matritsami */
+// Используется алгоритм Барейса, сложность O(n^3)
+function determinant(A) {
+	var N = A.length, B = [], denom = 1, exchanges = 0;
+	for (var i = 0; i < N; ++i) {
+		B[i] = [];
+		for (var j = 0; j < N; ++j)
+			B[i][j] = A[i][j];
+	}
+	for (var i = 0; i < N - 1; ++i) {
+		var maxN = i, maxValue = Math.abs(B[i][i]);
+		for (var j = i + 1; j < N; ++j) {
+			var value = Math.abs(B[j][i]);
+			if (value > maxValue) {
+				maxN = j;
+				maxValue = value;
+			}
+		}
+		if (maxN > i) {
+			var temp = B[i];
+			B[i] = B[maxN];
+			B[maxN] = temp;
+			++exchanges;
+		}
+		else {
+			if (maxValue == 0)
+				return maxValue;
+		}
+		var value1 = B[i][i];
+		for (var j = i + 1; j < N; ++j) {
+			var value2 = B[j][i];
+			B[j][i] = 0;
+			for (var k = i + 1; k < N; ++k)
+				B[j][k] = (B[j][k] * value1 - B[i][k] * value2) / denom;
+		}
+		denom = value1;
+	}
+	if (exchanges % 2)
+		return -B[N - 1][N - 1];
+	else
+		return B[N - 1][N - 1];
+}
+
 function createMatrix(index) {
-	var matrix = [[]];
+	var matrix = [];
 
 	var start = matricesInfo[index].indexFirstSelectedCell;
 	var end = matricesInfo[index].indexSecondSelectedCell;
 
 	// k - номер строки в матрице
 	for (var i = start, k = 0; i <= end; i += tableCols, k++) {
-		for (var j = 0; j < matricesInfo[index].cols; j++) {
-			matrix[k][j] = inputs[i + j].value;
-		}
 		matrix.push([]);
+		for (var j = 0; j < matricesInfo[index].cols; j++) {
+			matrix[k][j] = Number(inputs[i + j].value);
+		}
 	}
 
 
@@ -367,6 +352,39 @@ document.querySelector('.tools__clear-btn').addEventListener('click', function (
 		clearOn = false;
 	}
 });
+
+
+function printAnswer(C) {
+	var answerTableBody = document.querySelector('.answer-table__body');
+	if (answerTableBody) {
+		// удаляем старый, потом создаем новый
+		answerTableBody.remove();
+	}
+	answerTableBody = document.createElement('tbody');
+	answerTableBody.className = 'answer-table__body';
+	// cоздание таблицы ответов
+	for (var i = 0; i < C.length; i++) {
+		var tr = document.createElement('tr');
+		for (var j = 0; j < tableCols; j++) {
+			var td = document.createElement('td');
+			td.innerHTML = '<input type="text" class=\"input-text\">';
+			tr.appendChild(td);
+		}
+		answerTableBody.appendChild(tr);
+	}
+	document.querySelector('.answer-table').appendChild(answerTableBody);
+	// показать разделитель
+	var separator = document.querySelector('.separator');
+	separator.style.display = 'block';
+
+	// записываем массив "С" в таблицу ответов 
+	var answerInputs = document.querySelectorAll('.answer-table__body input[class="input-text"]');
+	for (var i = 0; i < C.length; i++) {
+		for (var j = 0; j < C[i].length; j++) {
+			answerInputs[i * tableCols + j].value = C[i][j];
+		}
+	}
+}
 
 function swap(a, b) {
 	return [b, a];
