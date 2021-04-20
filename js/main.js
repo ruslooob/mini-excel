@@ -222,7 +222,7 @@ document.querySelector('.tools__sum-btn').addEventListener('click', function () 
 	for (var i = 0; i < aInfo.rows; i++) {
 		C[i] = [];
 	}
-
+	// нужно написать функцию, которая будет складывать матрицы
 	for (var i = 0; i < aInfo.rows; i++) {
 		for (var j = 0; j < aInfo.cols; j++) {
 			C[i][j] = Number(A[i][j]) + Number(B[i][j]);
@@ -251,6 +251,7 @@ document.querySelector('.tools__sub-btn').addEventListener('click', function () 
 		C[i] = [];
 	}
 	// расчет матрицы C
+	// нужно написать отдельную ф-цию, которая будет вычитать матрицы
 	for (var i = 0; i < aInfo.rows; i++) {
 		for (var j = 0; j < aInfo.cols; j++) {
 			C[i][j] = A[i][j] - B[i][j];
@@ -260,7 +261,12 @@ document.querySelector('.tools__sub-btn').addEventListener('click', function () 
 });
 
 document.querySelector('.tools__multiply-btn').addEventListener('click', function () {
-
+	var A = createMatrix(0);
+	var B = createMatrix(1);
+	// нужно проверить на равенство числа 
+	// столбцов в А равно числу строк в В
+	var C = [];
+	printAnswer(multiplyMatrix(A, B));
 });
 
 document.querySelector('.tools__determenant-btn').addEventListener('click', function () {
@@ -271,7 +277,6 @@ document.querySelector('.tools__determenant-btn').addEventListener('click', func
 	// в двойные скобки, потому что ф-кция
 	// printAnswer принимает на вход двумерный массив
 	printAnswer([[determinant(A)]]);
-
 });
 
 
@@ -318,6 +323,23 @@ function determinant(A) {
 	else
 		return B[N - 1][N - 1];
 }
+
+function multiplyMatrix(A, B) {
+	var rowsA = A.length, colsA = A[0].length,
+		rowsB = B.length, colsB = B[0].length,
+		C = [];
+	if (colsA != rowsB) return false;
+	for (var i = 0; i < rowsA; i++) C[i] = [];
+	for (var k = 0; k < colsB; k++) {
+		for (var i = 0; i < rowsA; i++) {
+			var t = 0;
+			for (var j = 0; j < rowsB; j++) t += A[i][j] * B[j][k];
+			C[i][k] = t;
+		}
+	}
+	return C;
+}
+
 
 function createMatrix(index) {
 	var matrix = [];
