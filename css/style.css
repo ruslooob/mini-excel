@@ -30,6 +30,19 @@ body {
 .btn:hover {
 	background-color: #0e5c2f;
 }
+
+.separator {
+	/* не отображен по-умолчанию */
+	display: none;
+	margin: 10px;
+	background-color: black;
+	height: 5px;
+}
+
+.answer-table {
+	margin: 0 10px 10px 10px;
+}
+
 /* Начало анимации кнопок */
 /* Нужно потом сделать, чтобы при наведении на кнопку подчеркивалась ссылка */
 .btn span::after {
@@ -52,11 +65,11 @@ body {
 }
 /* Конец анимации кнопок */
 
-.table {
+.main-table {
 	margin: 0 10px 0 10px;
 }
 
-.table tr td {
+.main-table tr td {
 	margin: 0;
 }
 

@@ -38,10 +38,15 @@
 		2. Еще из фич можно добавить инвертирование выделения, если пользователь
 		 2 раза подняд делает одно и то же дейстие. Например, если он выделил область,
 		 а затем еще раз выделил ее же, то вся эта выделенная область меняет свой цвет.
+		3. Еще можно добавить разные цвета выделения. Например, если человек выделяет
+		одну область, она подсвечивается сервым, другую - салатовым и т д.
+		4. Можно еще подумать над пользовательским интерфейсом.
+				Шорткаты, которые способны многократно облегчить работу
+				Расположение кнопок
 */
 
 
-var tbody = document.getElementsByClassName('table__body')[0];
+var tbody = document.getElementsByClassName('main-table__body')[0];
 /* Параметры таблицы */
 var tableRows = 24; // 37
 var tableCols = 19;
@@ -77,9 +82,7 @@ for (var i = 0; i < tableRows; i++) {
 	var tr = document.createElement('tr');
 	for (var j = 0; j < tableCols; j++) {
 		var td = document.createElement('td');
-		// var input = document.createElement('input');
 		td.innerHTML = '<input type="text" class=\"input-text\">';
-		// td.appendChild(input);
 		tr.appendChild(td);
 	}
 	tbody.appendChild(tr);
@@ -101,7 +104,6 @@ for (var i = 0; i < inputs.length; i++) {
 	/* нахождение второй ячейки
 	активируется, когда пользователь отпускает ЛКМ 
 	и когда пользователь начал выделение */
-	// mousemove mouseup
 	inputs[i].addEventListener('mouseup', function (e) {
 		if (isSelect) {
 			secondSelectedCell = e.target;
@@ -216,7 +218,7 @@ document.querySelector('.tools__sum-btn').addEventListener('click', function () 
 	var aInfo = matricesInfo[0];
 	var bInfo = matricesInfo[1];
 
-	// Создание пустого массива "C"
+	// Создание пустого двумерного массива "C"
 	for (var i = 0; i < aInfo.rows; i++) {
 		C[i] = [];
 	}
@@ -226,9 +228,79 @@ document.querySelector('.tools__sum-btn').addEventListener('click', function () 
 			C[i][j] = Number(A[i][j]) + Number(B[i][j]);
 		}
 	}
+	/* Запись массива в матрицу ответов*/
+	/* Потом это надо будет в одну функцию вынести
+		Этой функции на вход будет подаваться матрица С"
+	*/
 
-	console.log(C);
+
+	var answerTableBody = document.querySelector('.answer-table__body');
+	if (answerTableBody) {
+		// удаляем старый, потом создаем новый
+		answerTableBody.remove();
+	}
+	answerTableBody = document.createElement('tbody');
+	answerTableBody.className = 'answer-table__body';
+	// cоздание таблицы ответов
+	for (var i = 0; i < C.length; i++) {
+		var tr = document.createElement('tr');
+		for (var j = 0; j < tableCols; j++) {
+			var td = document.createElement('td');
+			td.innerHTML = '<input type="text" class=\"input-text\">';
+			tr.appendChild(td);
+		}
+		answerTableBody.appendChild(tr);
+	}
+	document.querySelector('.answer-table').appendChild(answerTableBody);
+	// показать разделитель
+	var separator = document.querySelector('.separator');
+	separator.style.display = 'block';
+
+	// записываем массив "С" в таблицу ответов 
+	var answerInputs = document.querySelectorAll('.answer-table__body input[class="input-text"]');
+	for (var i = 0; i < C.length; i++) {
+		for (var j = 0; j < C[i].length; j++) {
+			answerInputs[i * tableCols + j].value = C[i][j];
+		}
+	}
+
+	// printAnswer(C);
+	// console.log(C);
 });
+
+function printAnswer(С) {
+	var answerTableBody = document.querySelector('.answer-table__body');
+	if (answerTableBody) {
+		// удаляем старый, потом создаем новый
+		answerTableBody.remove();
+	}
+	answerTableBody = document.createElement('tbody');
+	answerTableBody.className = 'answer-table__body';
+	// cоздание таблицы ответов
+	for (var i = 0; i < C.length; i++) {
+		var tr = document.createElement('tr');
+		for (var j = 0; j < tableCols; j++) {
+			var td = document.createElement('td');
+			td.innerHTML = '<input type="text" class=\"input-text\">';
+			tr.appendChild(td);
+		}
+		answerTableBody.appendChild(tr);
+	}
+	document.querySelector('.answer-table').appendChild(answerTableBody);
+	// показать разделитель
+	var separator = document.querySelector('.separator');
+	separator.style.display = 'block';
+
+	// записываем массив "С" в таблицу ответов 
+	var answerInputs = document.querySelectorAll('.answer-table__body input[class="input-text"]');
+	for (var i = 0; i < C.length; i++) {
+		for (var j = 0; j < C[i].length; j++) {
+			answerInputs[i * tableCols + j].value = C[i][j];
+		}
+	}
+	/* Конец */
+}
+
 
 document.querySelector('.tools__sub-btn').addEventListener('click', function () {
 	var A = createMatrix(0);
@@ -241,17 +313,17 @@ document.querySelector('.tools__sub-btn').addEventListener('click', function () 
 	var bInfo = matricesInfo[1];
 
 	// Создание пустого массива "C"
+	// можно переместить в отдельную функцию
 	for (var i = 0; i < aInfo.rows; i++) {
 		C[i] = [];
 	}
-
+	// расчет матрицы C
 	for (var i = 0; i < aInfo.rows; i++) {
 		for (var j = 0; j < aInfo.cols; j++) {
 			C[i][j] = Number(A[i][j]) - Number(B[i][j]);
 		}
 	}
 
-	console.log(C);
 });
 
 document.querySelector('.tools__multiply-btn').addEventListener('click', function () {
