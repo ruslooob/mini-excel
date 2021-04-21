@@ -46,6 +46,8 @@
 */
 
 
+
+
 var tbody = document.getElementsByClassName('main-table__body')[0];
 /* Параметры таблицы */
 var tableRows = 24; // 37
@@ -91,7 +93,6 @@ for (var i = 0; i < tableRows; i++) {
 var inputs = tbody.getElementsByClassName('input-text');
 
 
-
 /* добавление всем input событий*/
 for (var i = 0; i < inputs.length; i++) {
 	/* смена цвета при выделении 1 ячейки */
@@ -112,10 +113,10 @@ for (var i = 0; i < inputs.length; i++) {
 	активируется, когда пользователь отпускает ЛКМ 
 	и когда пользователь начал выделение */
 	inputs[i].addEventListener('mouseup', function (e) {
-		if (isSelect) {
+		// если выбрана и если левая кнопка
+		if (isSelect && e.which == 1) {
 			secondSelectedCell = e.target;
 		}
-
 		indexFirstSelectedCell = findCellIndex(firstSelectedCell);
 		indexSecondSelectedCell = findCellIndex(secondSelectedCell);
 		/* Для того, чтобы работало выделение справа снизу влево вверх */
@@ -141,7 +142,6 @@ for (var i = 0; i < inputs.length; i++) {
 		*/
 
 
-
 		/* если выделение происходит с НЕ левого верхнего угла в правый нижний 
 		или НЕ с правого нижнего в левый верхний (этот случай уже обрабатывается по дефолту) */
 		// проверить на избыточность условия << || >>
@@ -164,7 +164,9 @@ for (var i = 0; i < inputs.length; i++) {
 			var remainsI = i % tableCols;
 			if (remainsI >= colFirst && remainsI <= colSecond) {
 				inputs[i].style.backgroundColor = cellBackColor;
-
+				if (clearOn) {
+					inputs[i].value = "";
+				}
 			}
 
 		}
@@ -199,12 +201,12 @@ for (var i = 0; i < inputs.length; i++) {
 
 /* вычистелние начального пложения курсора */
 tbody.addEventListener('mousedown', function (e) {
-	isSelect = true;
-	firstSelectedCell = e.target;
+	// если нажата левая кнопка мыши
+	if (e.which == 1) {
+		isSelect = true;
+		firstSelectedCell = e.target;
+	}
 });
-
-
-
 
 
 /* Пытается найти ячеку во всех input 
@@ -217,11 +219,6 @@ function findCellIndex(cell) {
 	}
 	return -1;
 }
-
-
-
-
-
 
 
 document.querySelector('.tools__sum-btn').addEventListener('click', function () {
@@ -279,9 +276,6 @@ function correctSizes(A = undefined, B = undefined, action = 'none') {
 			return false;
 	}
 }
-
-
-
 
 document.querySelector('.tools__sub-btn').addEventListener('click', function () {
 	var A = createMatrix(0);
@@ -481,12 +475,10 @@ function printError() {
 	errorText.style.margin = "10px";
 	// red orange
 	errorText.style.color = "#ff3f34";
-
-
 }
 
 function swap(a, b) {
 	return [b, a];
 }
-
-
+// отключение контекстного меню
+document.oncontextmenu = function () { return false; };
