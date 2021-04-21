@@ -1,6 +1,6 @@
 ﻿/* 
 	Как работает программа:
-    
+	  
 	1. Рисование таблицы
 	2. Добавляются обработчики событий mousedown для input-ов
 		и mousedown для tdoby
@@ -135,9 +135,9 @@ for (var i = 0; i < inputs.length; i++) {
 
 
 		/* если выделение происходит справа налево 
-		   превращаем его как будто выделение происходило слева направо
-		   (нам известны правая верхняя и левая нижняя, но намного удобнее, 
-		   чтобы были известны левая верхняя и правая нижняя ячейки)
+			 превращаем его как будто выделение происходило слева направо
+			 (нам известны правая верхняя и левая нижняя, но намного удобнее, 
+			 чтобы были известны левая верхняя и правая нижняя ячейки)
 		*/
 
 
@@ -218,6 +218,12 @@ function findCellIndex(cell) {
 document.querySelector('.tools__sum-btn').addEventListener('click', function () {
 	var A = createMatrix(0);
 	var B = createMatrix(1);
+
+
+	if (!correctSizes(A, B, '+')) {
+		printError();
+		return;
+	}
 	// C будет соразмерна с A && B
 	var C = [];
 
@@ -236,8 +242,34 @@ document.querySelector('.tools__sum-btn').addEventListener('click', function () 
 		}
 	}
 	/* Запись массива в матрицу ответов*/
+	/* 100% код можно сократить в несколько раз */
 	printAnswer(C);
 });
+/* функция очень простая, но написана ужасно */
+function correctSizes(A = undefined, B = undefined, action = 'none') {
+	switch (action) {
+		case '+':
+		case '-':
+			if (A == undefined || B == undefined)
+				return false;
+			else if (A.length == A[0].length && B.length == B[0].length)
+				return true;
+			return false;
+		case '*':
+			if (A == undefined || B == undefined)
+				return false;
+			// если число столбцов в 1 равно числу строк во 2
+			else if (A[0].length == B.length)
+				return true;
+			return false;
+		case 'det':
+			if (A == undefined)
+				return false;
+			else if (A.length == A[0].length)
+				return true;
+			return false;
+	}
+}
 
 
 
@@ -248,6 +280,10 @@ document.querySelector('.tools__sub-btn').addEventListener('click', function () 
 	// C будет соразмерна с A && B
 	var C = [];
 
+	if (!correctSizes(A, B, '-')) {
+		printError();
+		return;
+	}
 
 	var aInfo = matricesInfo[0];
 	var bInfo = matricesInfo[1];
@@ -273,6 +309,11 @@ document.querySelector('.tools__multiply-btn').addEventListener('click', functio
 	// нужно проверить на равенство числа 
 	// столбцов в А равно числу строк в В
 	var C = [];
+
+	if (!correctSizes(A, B, '*')) {
+		printError();
+		return;
+	}
 	printAnswer(multiplyMatrix(A, B));
 });
 
@@ -280,7 +321,10 @@ document.querySelector('.tools__determenant-btn').addEventListener('click', func
 	// детерменант будет расчитываться
 	// по последней выделенной матрице 
 	var A = createMatrix(1);
-
+	if (!correctSizes(A, '*')) {
+		printError();
+		return;
+	}
 	// в двойные скобки, потому что ф-кция
 	// printAnswer принимает на вход двумерный массив
 	printAnswer([[determinant(A)]]);
@@ -415,11 +459,28 @@ function printAnswer(C) {
 	}
 }
 
+function printError() {
+	var answerTableBody = document.querySelector('.answer-table__body');
+	if (answerTableBody) {
+		// удаляем старый, потом создаем новый
+		answerTableBody.remove();
+	}
+	// создаем tbody
+	answerTableBody = document.createElement('tbody');
+	answerTableBody.className = 'answer-table__body';
+	answerTableBody.innerHTML = "<span class=\"error-text\">Проверьте правильность введенных данных!<span>";
+	document.querySelector('.answer-table').appendChild(answerTableBody);
+	var errorText = document.querySelector('.error-text');
+	errorText.style.display = "block";
+	errorText.style.margin = "10px";
+	// red orange
+	errorText.style.color = "#ff3f34";
+
+
+}
+
 function swap(a, b) {
 	return [b, a];
 }
 
 
-document.querySelector('.input-text').addEventListener('keyup', function () {
-	this.value = this.value.replace(/[^\d]/g, '');
-});
