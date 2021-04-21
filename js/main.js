@@ -101,6 +101,13 @@ for (var i = 0; i < inputs.length; i++) {
 		}
 		lastSelectedCell = e.target;
 	});
+	// валидация (можно вводить только цифры)
+
+	inputs[i].addEventListener('keyup', function () {
+		this.value = this.value.replace(/[^\d]/g, '');
+	});
+
+
 	/* нахождение второй ячейки
 	активируется, когда пользователь отпускает ЛКМ 
 	и когда пользователь начал выделение */
@@ -323,7 +330,7 @@ function determinant(A) {
 	else
 		return B[N - 1][N - 1];
 }
-
+/* */
 function multiplyMatrix(A, B) {
 	var rowsA = A.length, colsA = A[0].length,
 		rowsB = B.length, colsB = B[0].length,
@@ -411,3 +418,8 @@ function printAnswer(C) {
 function swap(a, b) {
 	return [b, a];
 }
+
+
+document.querySelector('.input-text').addEventListener('keyup', function () {
+	this.value = this.value.replace(/[^\d]/g, '');
+});
