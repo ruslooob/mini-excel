@@ -181,6 +181,7 @@ for (var i = 0; i < inputs.length; i++) {
 						inputs[i + j].style.backgroundColor = 'white';
 					}
 				}
+				// удаляем старое выделение из инфор-матрицы
 				matricesInfo.shift();
 			}
 			var matrix = new MatrixInfo();
@@ -325,11 +326,11 @@ document.querySelector('.tools__multiply-btn').addEventListener('click', functio
 	printAnswer(multiplyMatrix(A, B));
 });
 
-document.querySelector('.tools__determenant-btn').addEventListener('click', function () {
+document.querySelector('.tools__determinant-btn').addEventListener('click', function () {
 	// детерменант будет расчитываться
 	// по последней выделенной матрице 
 	var A = createMatrix(1);
-	if (!correctSizes(A, '*')) {
+	if (!correctSizes(A, undefined, 'det')) {
 		printError();
 		return;
 	}
