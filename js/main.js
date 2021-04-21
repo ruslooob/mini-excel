@@ -457,6 +457,8 @@ function printAnswer(C) {
 			answerInputs[i * tableCols + j].value = C[i][j];
 		}
 	}
+
+	window.scrollBy(0, 100);
 }
 
 function printError() {
