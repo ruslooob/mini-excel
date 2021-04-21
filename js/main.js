@@ -173,6 +173,14 @@ for (var i = 0; i < inputs.length; i++) {
 		// всего хранится может не боле 2 матриц
 		if (!clearOn) {
 			if (matricesInfo.length == 2) {
+				// стираем старое выделение
+				var start = matricesInfo[0].indexFirstSelectedCell;
+				var end = matricesInfo[0].indexSecondSelectedCell;
+				for (var i = start; i <= end; i += tableCols) {
+					for (var j = 0; j < matricesInfo[0].cols; j++) {
+						inputs[i + j].style.backgroundColor = 'white';
+					}
+				}
 				matricesInfo.shift();
 			}
 			var matrix = new MatrixInfo();
@@ -405,9 +413,6 @@ function createMatrix(index) {
 			matrix[k][j] = Number(inputs[i + j].value);
 		}
 	}
-
-
-
 	return matrix;
 }
 
