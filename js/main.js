@@ -180,7 +180,14 @@ for (var i = 0; i < inputs.length; i++) {
 				var end = matricesInfo[0].indexSecondSelectedCell;
 				for (var i = start; i <= end; i += tableCols) {
 					for (var j = 0; j < matricesInfo[0].cols; j++) {
+						var start2 = matricesInfo[1].indexFirstSelectedCell;
+						var end2 = matricesInfo[1].indexSecondSelectedCell;
+						console.log(start2);
+						console.log(end2);
+						// если нет пересечения
+						// if (((i + j) < start2) || ((i + j) > end2)) {
 						inputs[i + j].style.backgroundColor = 'white';
+						// }
 					}
 				}
 				// удаляем старое выделение из инфор-матрицы
@@ -258,7 +265,7 @@ function correctSizes(A = undefined, B = undefined, action = 'none') {
 		case '-':
 			if (A == undefined || B == undefined)
 				return false;
-			else if (A.length == A[0].length && B.length == B[0].length)
+			else if (A.length == B.length && A[0].length == B[0].length)
 				return true;
 			return false;
 		case '*':
